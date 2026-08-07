@@ -1,24 +1,29 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { Bird } from "lucide-react";
+import Button from "./Button";
+import MoodPhoto from "./MoodPhoto";
 
-const FEATURES = [
-  {
-    src: "/images/dakrenovatie-promo.jpg",
-    alt: "Voor en na vergelijking van een dakrenovatie door SG Onderneming",
-    title: "Dakrenovatie",
-    description:
-      "Een verouderd of beschadigd dak vormt de basis van elk verduurzamingsplan. Wij vernieuwen uw dak grondig en vakkundig, zodat het klaar is voor de komende decennia — inclusief zonnepanelen.",
-  },
-  {
-    src: "/images/birdblockers-promo.jpg",
-    alt: "Vogelwerende mesh aangebracht onder zonnepanelen",
-    title: "Vogelwering",
-    description:
-      "Vogels onder zonnepanelen zorgen voor overlast, nesten en schade. Met discrete vogelwerende mesh houden we uw installatie schoon, veilig en onderhoudsarm.",
-  },
-];
+const DAKRENOVATIE_FEATURE = {
+  title: "Dakrenovatie",
+  description:
+    "Een verouderd of beschadigd dak vormt de basis van elk verduurzamingsplan. Wij vernieuwen uw dak grondig en vakkundig, zodat het klaar is voor de komende decennia — inclusief zonnepanelen.",
+  photos: [
+    {
+      src: "/images/projecten/project-10-dak.jpg",
+      alt: "Dakwerk in uitvoering door een monteur van SG Onderneming",
+    },
+    {
+      src: "/images/projecten/project-11-dak.jpg",
+      alt: "Dakrenovatie project van SG Onderneming in volle gang",
+    },
+    {
+      src: "/images/projecten/project-12-dak.jpg",
+      alt: "Vakkundig uitgevoerd dakwerk, klaar voor zonnepanelen",
+    },
+  ],
+};
 
 export default function FeatureStrip() {
   return (
@@ -40,43 +45,97 @@ export default function FeatureStrip() {
         </motion.div>
 
         <div className="mt-14 flex flex-col gap-16">
-          {FEATURES.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className={`flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-14 ${
-                index % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
-            >
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-background-alt lg:w-1/2">
-                <Image
-                  src={feature.src}
-                  alt={feature.alt}
+          {/* Dakrenovatie — real project photo */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-14"
+          >
+            <div className="grid aspect-[16/10] w-full grid-cols-2 grid-rows-2 gap-2 lg:w-1/2">
+              <div className="relative row-span-2 overflow-hidden rounded-2xl bg-background-alt">
+                <MoodPhoto
+                  src={DAKRENOVATIE_FEATURE.photos[0].src}
+                  alt={DAKRENOVATIE_FEATURE.photos[0].alt}
                   fill
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="object-contain"
+                  tint="edge"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  containerClassName="absolute inset-0"
+                  imageClassName="object-cover"
                 />
               </div>
-              <div className="w-full lg:w-1/2">
-                <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                  {feature.title}
-                </h3>
-                <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
-                  {feature.description}
-                </p>
-                <a
-                  href="#contact"
-                  className="focus-ring mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent-soft"
-                >
-                  Meer informatie
-                  <span aria-hidden="true">&rarr;</span>
-                </a>
+              <div className="relative overflow-hidden rounded-2xl bg-background-alt">
+                <MoodPhoto
+                  src={DAKRENOVATIE_FEATURE.photos[1].src}
+                  alt={DAKRENOVATIE_FEATURE.photos[1].alt}
+                  fill
+                  tint="edge"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  containerClassName="absolute inset-0"
+                  imageClassName="object-cover"
+                />
               </div>
-            </motion.div>
-          ))}
+              <div className="relative overflow-hidden rounded-2xl bg-background-alt">
+                <MoodPhoto
+                  src={DAKRENOVATIE_FEATURE.photos[2].src}
+                  alt={DAKRENOVATIE_FEATURE.photos[2].alt}
+                  fill
+                  tint="edge"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  containerClassName="absolute inset-0"
+                  imageClassName="object-cover"
+                />
+              </div>
+            </div>
+            <div className="w-full lg:w-1/2">
+              <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                {DAKRENOVATIE_FEATURE.title}
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
+                {DAKRENOVATIE_FEATURE.description}
+              </p>
+              <Button href="#contact" variant="secondary" size="sm" className="mt-6">
+                Meer informatie
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Vogelwering — no project photo available yet, so the graphic
+              panel leans on the same diagonal livery-stripe language as the
+              van instead of a stock photo. */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col gap-8 lg:flex-row-reverse lg:items-center lg:gap-14"
+          >
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-background-deep lg:w-1/2">
+              <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+                <div className="absolute inset-y-0 left-[15%] w-16 -skew-x-[20deg] bg-gradient-to-b from-[#1f6fb2]/70 to-[#1f6fb2]/30" />
+                <div className="absolute inset-y-0 left-[38%] w-24 -skew-x-[20deg] bg-gradient-to-b from-accent/80 to-accent-soft/40" />
+                <div className="absolute inset-y-0 left-[58%] w-6 -skew-x-[20deg] bg-white/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background-deep via-background-deep/40 to-transparent" />
+              </div>
+              <div className="relative z-10 flex h-full items-center justify-center">
+                <Bird size={72} className="text-foreground drop-shadow-lg" aria-hidden="true" />
+              </div>
+            </div>
+            <div className="w-full lg:w-1/2">
+              <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Vogelwering
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
+                Vogels onder zonnepanelen zorgen voor overlast, nesten en
+                schade. Met discrete vogelwerende mesh houden we uw
+                installatie schoon, veilig en onderhoudsarm.
+              </p>
+              <Button href="#contact" variant="secondary" size="sm" className="mt-6">
+                Meer informatie
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

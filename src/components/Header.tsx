@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Button from "./Button";
 
 const NAV_LINKS = [
   { href: "#home", label: "Home" },
@@ -89,12 +90,9 @@ export default function Header() {
           >
             06 11 18 53 95
           </a>
-          <a
-            href="#contact"
-            className="focus-ring inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-black transition-transform hover:scale-105 hover:bg-accent-soft"
-          >
+          <Button href="#contact" size="sm">
             Offerte aanvragen
-          </a>
+          </Button>
         </div>
 
         <button
@@ -140,13 +138,9 @@ export default function Header() {
               >
                 06 11 18 53 95
               </a>
-              <a
-                href="#contact"
-                onClick={() => setMenuOpen(false)}
-                className="focus-ring mt-2 inline-flex items-center justify-center rounded-full bg-accent px-5 py-3 text-base font-bold text-black transition-colors hover:bg-accent-soft"
-              >
+              <Button href="#contact" onClick={() => setMenuOpen(false)} className="mt-2">
                 Offerte aanvragen
-              </a>
+              </Button>
             </nav>
           </motion.div>
         )}

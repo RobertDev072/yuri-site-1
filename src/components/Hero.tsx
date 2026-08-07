@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import Button from "./Button";
 
 export default function Hero() {
   return (
@@ -36,18 +37,10 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <a
-            href="#contact"
-            className="focus-ring inline-flex items-center justify-center rounded-full bg-accent px-8 py-4 text-base font-bold text-black transition-transform hover:scale-105 hover:bg-accent-soft"
-          >
-            Offerte aanvragen
-          </a>
-          <a
-            href="#oplossingen"
-            className="focus-ring inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-foreground backdrop-blur-sm transition-colors hover:bg-white/10"
-          >
+          <Button href="#contact">Offerte aanvragen</Button>
+          <Button href="#oplossingen" variant="secondary">
             Bekijk onze oplossingen
-          </a>
+          </Button>
         </div>
 
         <dl className="mt-16 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-4">

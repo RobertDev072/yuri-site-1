@@ -55,8 +55,12 @@ export default function Stats() {
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-border-subtle bg-white/[0.03] p-6 text-center backdrop-blur-sm sm:p-8"
+              className="relative overflow-hidden rounded-2xl border border-border-subtle bg-white/[0.03] p-6 text-center backdrop-blur-sm sm:p-8"
             >
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 -skew-x-[30deg] bg-gradient-to-r from-accent via-accent-soft to-[#1f6fb2]"
+              />
               <div className="text-4xl font-black tracking-tighter text-accent sm:text-5xl">
                 <Counter stat={stat} />
               </div>

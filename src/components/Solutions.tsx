@@ -101,6 +101,10 @@ export default function Solutions() {
                     : "lg:col-span-1"
                 }`}
               >
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-1 -skew-x-[30deg] bg-gradient-to-r from-accent via-accent-soft to-[#1f6fb2] opacity-70 transition-opacity group-hover:opacity-100"
+                />
                 {solution.flagship && (
                   <span className="absolute right-5 top-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-black">
                     Populair

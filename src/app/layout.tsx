@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export const metadata: Metadata = {
   title: "SG Onderneming — Bouw & Verduurzaming | Van A tot Z geregeld",
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="nl" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   );

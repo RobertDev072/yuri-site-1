@@ -1,13 +1,139 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
+import { MapPin } from "lucide-react";
+import Image from "next/image";
+
+// Real company van photo (background removed, soft contact shadow kept under
+// the wheels) — 1200x481 source, so every wrapper below locks that same
+// aspect ratio and lets the image scale via `fill` instead of intrinsic
+// width/height, matching how the old drawn <Van /> scaled responsively.
+const VAN_ASPECT = "1200 / 481";
+
+function VanPhoto({ className = "" }: { className?: string }) {
+  return (
+    <div className={`relative ${className}`} style={{ aspectRatio: VAN_ASPECT }}>
+      {/* Ambient light bloom behind the van — sits under the photo (negative
+          z-index within this positioned wrapper) so it reads as a glow the
+          van is driving through, not a highlight painted on top of it. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 scale-125 bg-[radial-gradient(ellipse_at_center,rgba(255,122,26,0.4),transparent_65%)] blur-2xl"
+      />
+      <Image
+        src="/images/van-cutout.png"
+        alt="Bedrijfswagen van SG Onderneming met oranje-blauwe wrap-belettering"
+        fill
+        sizes="(max-width: 768px) 90vw, 640px"
+        className="object-contain drop-shadow-[0_0_40px_rgba(255,122,26,0.45)]"
+      />
+    </div>
+  );
+}
+
+/**
+ * Scroll progress checkpoints shared by every transform below. Keeping one
+ * canonical list of "beats" — and always anchoring index 0 to progress 0 and
+ * the last index to progress 1 — means every `useTransform` call stays fully
+ * defined across [0, 1] and never snaps to a default/clamped value outside
+ * its own keyframes (a common framer-motion gotcha).
+ *
+ * The gaps between beats are deliberately uneven: short gaps ("dwell" beats,
+ * e.g. 0.26 -> 0.34) make the van barely move while a callout is passing, and
+ * long gaps (e.g. 0.34 -> 0.50) make it cruise quickly to the next waypoint —
+ * that unevenness is what turns a single linear glide into a multi-beat
+ * drive sequence.
+ */
+// framer-motion's `useTransform` types its input/output ranges as mutable
+// arrays, so these are deliberately plain `number[]` (not `as const` tuples)
+// to avoid a readonly-vs-mutable type mismatch at the call sites below.
+const BEATS: number[] = [0, 0.1, 0.26, 0.34, 0.5, 0.58, 0.74, 0.82, 1];
+
+// Horizontal travel (vw units): off-screen left -> cruise -> dwell at
+// waypoint 1 -> cruise -> dwell at waypoint 2 -> cruise -> dwell at
+// waypoint 3 -> drives on and off-screen right.
+const X_VW: number[] = [-42, -6, 14, 18, 46, 50, 80, 84, 108];
+// Small vertical bob suggesting suspension travel while moving.
+const Y_PX: number[] = [0, -5, 3, -4, 4, -3, 4, -3, 0];
+// Slight nose-up/nose-down rotation on acceleration and braking.
+const ROTATE_DEG: number[] = [0, -1.6, 1, -1.2, 0.9, -1, 0.9, -0.9, 0];
+
+type StatCallout = {
+  kind: "stat";
+  value: string;
+  label: string;
+  center: number;
+  top: string;
+  left: string;
+};
+
+type TextCallout = {
+  kind: "text";
+  text: string;
+  center: number;
+  top: string;
+  left: string;
+};
+
+type Callout = StatCallout | TextCallout;
+
+// Centered on the three "dwell" beats above (0.30, 0.54, 0.78) so each card
+// appears just as the van is passing that waypoint, matching the left%
+// position the van has reached at that point in its travel.
+const CALLOUTS: Callout[] = [
+  { kind: "stat", value: "500+", label: "installaties", center: 0.3, top: "14%", left: "16%" },
+  { kind: "stat", value: "10+", label: "jaar garantie", center: 0.54, top: "64%", left: "48%" },
+  { kind: "text", text: "Actief in heel Nederland", center: 0.78, top: "20%", left: "82%" },
+];
+
+function CalloutBubble({
+  callout,
+  progress,
+}: {
+  callout: Callout;
+  progress: MotionValue<number>;
+}) {
+  const spread = 0.1;
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  const range: [number, number, number, number] = [
+    clamp(callout.center - spread),
+    clamp(callout.center - spread * 0.35),
+    clamp(callout.center + spread * 0.35),
+    clamp(callout.center + spread),
+  ];
+  const opacity = useTransform(progress, range, [0, 1, 1, 0]);
+  const y = useTransform(progress, range, [18, 0, 0, -14]);
+
+  return (
+    <motion.div
+      style={{ opacity, y, top: callout.top, left: callout.left }}
+      className="absolute z-20 -translate-x-1/2 rounded-2xl border border-white/15 bg-background-alt/90 px-5 py-4 text-center shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9)] backdrop-blur-sm"
+    >
+      {callout.kind === "stat" ? (
+        <>
+          <p className="text-2xl font-black tracking-tighter text-accent sm:text-3xl">
+            {callout.value}
+          </p>
+          <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-foreground-muted sm:text-sm">
+            {callout.label}
+          </p>
+        </>
+      ) : (
+        <p className="flex items-center gap-2 text-sm font-bold tracking-tight text-foreground sm:text-base">
+          <MapPin size={18} className="shrink-0 text-accent" aria-hidden="true" />
+          {callout.text}
+        </p>
+      )}
+    </motion.div>
+  );
+}
 
 export default function VanReveal() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -18,80 +144,138 @@ export default function VanReveal() {
     offset: ["start start", "end end"],
   });
 
-  const rawX = useTransform(scrollYProgress, [0, 0.65, 1], [-420, 0, 0]);
-  const rawRotateY = useTransform(scrollYProgress, [0, 0.65, 1], [-28, 0, 0]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.35, 0.7], [0, 0.5, 1]);
-  const rawScale = useTransform(scrollYProgress, [0, 0.65, 1], [0.82, 1, 1]);
-  const settledOpacity = useTransform(
+  const x = useTransform(
     scrollYProgress,
-    [0.65, 0.85, 1],
-    [0, 1, 1]
+    BEATS,
+    X_VW.map((v) => `${v}vw`)
   );
-  const streakOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0.4]);
+  const y = useTransform(
+    scrollYProgress,
+    BEATS,
+    Y_PX.map((v) => `${v}px`)
+  );
+  const rotate = useTransform(scrollYProgress, BEATS, ROTATE_DEG);
 
-  const x = prefersReducedMotion ? 0 : rawX;
-  const rotateY = prefersReducedMotion ? 0 : rawRotateY;
-  const opacity = prefersReducedMotion ? 1 : rawOpacity;
-  const scale = prefersReducedMotion ? 1 : rawScale;
-  const logoOpacity = prefersReducedMotion ? 1 : settledOpacity;
+  const streakOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  // Streaks travel a much larger horizontal distance than the van across the
+  // same [0, 1] scroll range, so they visibly overtake it — cheap parallax.
+  const streakX = useTransform(scrollYProgress, [0, 1], ["8vw", "-160vw"]);
+  // The dashed route line's background scrolls under the van, reinforcing
+  // forward motion even during the slow "dwell" beats.
+  const routeOffset = useTransform(scrollYProgress, [0, 1], ["0px", "-2400px"]);
 
   return (
     <section
       ref={sectionRef}
-      aria-label="De SG Onderneming bedrijfswagen"
-      className="relative h-[220vh] bg-background-deep"
+      aria-label="De SG Onderneming bedrijfswagen op de weg"
+      className="relative bg-background-deep"
+      style={{ height: prefersReducedMotion ? undefined : "300vh" }}
     >
-      <div className="sticky top-0 flex h-screen w-full flex-col items-center justify-center overflow-hidden">
-        {/* Diagonal accent light streaks, pure CSS gradients */}
+      <div
+        className={
+          prefersReducedMotion
+            ? "flex w-full flex-col items-center justify-center overflow-hidden py-24"
+            : "sticky top-0 flex h-screen w-full flex-col items-center justify-center overflow-hidden"
+        }
+      >
+        {/* Diagonal light streaks / speed lines, pure CSS gradients */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,26,0.08),transparent_60%)]" />
-          <motion.div
-            style={{ opacity: streakOpacity }}
-            className="absolute -left-1/4 top-0 h-full w-1/3 -skew-x-12 bg-gradient-to-b from-transparent via-accent/15 to-transparent blur-2xl"
-          />
-          <motion.div
-            style={{ opacity: streakOpacity }}
-            className="absolute left-1/4 top-0 h-full w-[10%] -skew-x-12 bg-gradient-to-b from-transparent via-white/10 to-transparent blur-xl"
-          />
-          <motion.div
-            style={{ opacity: streakOpacity }}
-            className="absolute right-[-10%] top-0 h-full w-1/4 -skew-x-12 bg-gradient-to-b from-transparent via-accent/10 to-transparent blur-2xl"
-          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,26,0.07),transparent_60%)]" />
+          {!prefersReducedMotion && (
+            <>
+              <motion.div
+                style={{ opacity: streakOpacity, x: streakX }}
+                className="absolute left-0 top-[38%] h-[3px] w-1/4 -skew-y-1 bg-gradient-to-r from-transparent via-white/25 to-transparent blur-[1px]"
+              />
+              <motion.div
+                style={{ opacity: streakOpacity, x: streakX }}
+                className="absolute left-[10%] top-[52%] h-[2px] w-1/3 -skew-y-1 bg-gradient-to-r from-transparent via-accent/40 to-transparent blur-[1px]"
+              />
+              <motion.div
+                style={{ opacity: streakOpacity, x: streakX }}
+                className="absolute left-[20%] top-[64%] h-[2px] w-1/5 -skew-y-1 bg-gradient-to-r from-transparent via-white/20 to-transparent blur-[1px]"
+              />
+              <div className="absolute -left-1/4 top-0 h-full w-1/3 -skew-x-12 bg-gradient-to-b from-transparent via-accent/10 to-transparent blur-2xl" />
+              <div className="absolute right-[-10%] top-0 h-full w-1/4 -skew-x-12 bg-gradient-to-b from-transparent via-accent/10 to-transparent blur-2xl" />
+            </>
+          )}
         </div>
 
-        <p className="relative z-10 mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-foreground-muted sm:mb-10">
+        <p className="relative z-10 mb-8 text-xs font-semibold uppercase tracking-[0.3em] text-foreground-muted sm:mb-10">
           Op de weg voor heel Nederland
         </p>
 
-        <div
-          className="relative z-10 w-full px-6"
-          style={{ perspective: "1400px" }}
-        >
-          <motion.div
-            style={{ x, rotateY, scale, opacity }}
-            className="relative mx-auto aspect-[16/9] w-full max-w-5xl"
-          >
-            <Image
-              src="/images/van-hero.jpg"
-              alt="Zwarte bedrijfswagen van SG Onderneming met oranje-blauwe belettering"
-              fill
-              sizes="(min-width: 1024px) 1024px, 100vw"
-              className="rounded-2xl object-cover shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)]"
+        <div className="relative z-10 h-[46vh] w-full min-h-[220px] max-h-[420px]">
+          {/* Animated dashed route line the van appears to drive along */}
+          {!prefersReducedMotion && (
+            <motion.div
+              aria-hidden="true"
+              style={{
+                top: "68%",
+                backgroundPositionX: routeOffset,
+              }}
+              className="absolute left-0 right-0 h-[3px] bg-[repeating-linear-gradient(90deg,rgba(255,122,26,0.55)_0px,rgba(255,122,26,0.55)_28px,transparent_28px,transparent_56px)] opacity-70"
             />
-          </motion.div>
+          )}
+
+          {prefersReducedMotion ? (
+            <div className="flex h-full items-center justify-center px-6">
+              <VanPhoto className="w-full max-w-2xl" />
+            </div>
+          ) : (
+            <motion.div
+              style={{ x, y, rotate }}
+              className="absolute top-1/2 w-[46vw] min-w-[320px] max-w-[640px] -translate-y-1/2"
+            >
+              <VanPhoto className="w-full" />
+            </motion.div>
+          )}
+
+          {!prefersReducedMotion &&
+            CALLOUTS.map((callout) => (
+              <CalloutBubble
+                key={callout.kind === "stat" ? callout.label : callout.text}
+                callout={callout}
+                progress={scrollYProgress}
+              />
+            ))}
         </div>
 
-        <motion.div
-          style={{ opacity: logoOpacity }}
-          className="relative z-10 mt-8 flex flex-col items-center gap-2 text-center sm:mt-12"
-        >
+        {prefersReducedMotion && (
+          <div className="relative z-10 mt-4 flex flex-wrap items-center justify-center gap-4 px-6">
+            {CALLOUTS.map((callout) => (
+              <div
+                key={callout.kind === "stat" ? callout.label : callout.text}
+                className="rounded-2xl border border-white/15 bg-background-alt/90 px-5 py-4 text-center"
+              >
+                {callout.kind === "stat" ? (
+                  <>
+                    <p className="text-2xl font-black tracking-tighter text-accent sm:text-3xl">
+                      {callout.value}
+                    </p>
+                    <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-foreground-muted sm:text-sm">
+                      {callout.label}
+                    </p>
+                  </>
+                ) : (
+                  <p className="flex items-center gap-2 text-sm font-bold tracking-tight text-foreground sm:text-base">
+                    <MapPin size={18} className="shrink-0 text-accent" aria-hidden="true" />
+                    {callout.text}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="relative z-10 mt-10 flex flex-col items-center gap-2 text-center sm:mt-12">
           <span className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
             SG <span className="text-accent">ONDERNEMING</span>
           </span>
           <span className="text-sm font-medium tracking-wide text-foreground-muted">
             Van A tot Z geregeld
           </span>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
