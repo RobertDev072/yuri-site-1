@@ -11,13 +11,27 @@ import {
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 
-// Real company van photo (background removed, soft contact shadow kept under
-// the wheels) — 1200x481 source, so every wrapper below locks that same
-// aspect ratio and lets the image scale via `fill` instead of intrinsic
-// width/height, matching how the old drawn <Van /> scaled responsively.
-const VAN_ASPECT = "1200 / 481";
+// Real company van photo (clean pre-made cutout, transparent background) —
+// 640x271 source, so every wrapper below locks that same aspect ratio and
+// lets the image scale via `fill` instead of intrinsic width/height,
+// matching how the old drawn <Van /> scaled responsively.
+const VAN_ASPECT = "640 / 271";
 
-function VanPhoto({ className = "" }: { className?: string }) {
+// Where the tires touch the ground, as a percentage down the van photo's own
+// bounding box (measured on the source image). The road line below is
+// anchored to this exact height so it reads as the wheels meeting asphalt,
+// not a strip floating under the van.
+const WHEEL_LINE_PCT = 91.9;
+
+function VanPhoto({
+  className = "",
+  dashOffset,
+}: {
+  className?: string;
+  // Drives the road line's dash parallax. Omitted (reduced motion) renders a
+  // static line instead of an animated one.
+  dashOffset?: MotionValue<string>;
+}) {
   return (
     <div className={`relative ${className}`} style={{ aspectRatio: VAN_ASPECT }}>
       {/* Ambient light bloom behind the van — sits under the photo (negative
@@ -34,6 +48,27 @@ function VanPhoto({ className = "" }: { className?: string }) {
         sizes="(max-width: 768px) 90vw, 640px"
         className="object-contain drop-shadow-[0_0_40px_rgba(255,122,26,0.45)]"
       />
+      {/* Road line, anchored inside the van's own bounding box at wheel
+          height so it bobs/tilts/translates as one rigid unit with the van
+          (it's a descendant of the same transformed wrapper) instead of
+          drifting off the tires. Sized well beyond the van on both sides so
+          it reads as a road disappearing off-frame, not a wheel-width patch. */}
+      <div
+        aria-hidden="true"
+        style={{ top: `${WHEEL_LINE_PCT}%` }}
+        className="pointer-events-none absolute left-1/2 h-0 w-[220vw] -translate-x-1/2"
+      >
+        {/* Soft glow base, sells "premium" over a hard cartoon stripe */}
+        <div className="absolute inset-x-0 top-0 h-[3px] -translate-y-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent blur-[2px]" />
+        {dashOffset ? (
+          <motion.div
+            style={{ backgroundPositionX: dashOffset }}
+            className="absolute inset-x-0 top-0 h-px -translate-y-1/2 bg-[repeating-linear-gradient(90deg,rgba(255,122,26,0.55)_0px,rgba(255,122,26,0.55)_16px,transparent_16px,transparent_42px)] opacity-80"
+          />
+        ) : (
+          <div className="absolute inset-x-0 top-0 h-px -translate-y-1/2 bg-[repeating-linear-gradient(90deg,rgba(255,122,26,0.55)_0px,rgba(255,122,26,0.55)_16px,transparent_16px,transparent_42px)] opacity-80" />
+        )}
+      </div>
     </div>
   );
 }
@@ -118,7 +153,7 @@ function CalloutBubble({
     >
       {callout.kind === "stat" ? (
         <>
-          <p className="text-2xl font-black tracking-tighter text-accent sm:text-3xl">
+          <p className="font-display text-2xl font-black tracking-tighter text-accent sm:text-3xl">
             {callout.value}
           </p>
           <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-foreground-muted sm:text-sm">
@@ -160,9 +195,18 @@ export default function VanReveal() {
   // Streaks travel a much larger horizontal distance than the van across the
   // same [0, 1] scroll range, so they visibly overtake it — cheap parallax.
   const streakX = useTransform(scrollYProgress, [0, 1], ["8vw", "-160vw"]);
-  // The dashed route line's background scrolls under the van, reinforcing
-  // forward motion even during the slow "dwell" beats.
-  const routeOffset = useTransform(scrollYProgress, [0, 1], ["0px", "-2400px"]);
+  // The road line's dashes reuse the exact same BEATS/scroll checkpoints as
+  // the van's own `x` travel above, scaled up and flipped in sign. That
+  // keeps them mathematically in sync with the van (same cruise/dwell
+  // timing) while drifting the opposite way and faster than it, so the road
+  // reads as passing backward beneath a forward-moving van rather than a
+  // static line painted under it.
+  const ROAD_PARALLAX_MULT = -2.4;
+  const roadDashOffset = useTransform(
+    scrollYProgress,
+    BEATS,
+    X_VW.map((v) => `${v * ROAD_PARALLAX_MULT}vw`)
+  );
 
   return (
     <section
@@ -206,18 +250,6 @@ export default function VanReveal() {
         </p>
 
         <div className="relative z-10 h-[46vh] w-full min-h-[220px] max-h-[420px]">
-          {/* Animated dashed route line the van appears to drive along */}
-          {!prefersReducedMotion && (
-            <motion.div
-              aria-hidden="true"
-              style={{
-                top: "68%",
-                backgroundPositionX: routeOffset,
-              }}
-              className="absolute left-0 right-0 h-[3px] bg-[repeating-linear-gradient(90deg,rgba(255,122,26,0.55)_0px,rgba(255,122,26,0.55)_28px,transparent_28px,transparent_56px)] opacity-70"
-            />
-          )}
-
           {prefersReducedMotion ? (
             <div className="flex h-full items-center justify-center px-6">
               <VanPhoto className="w-full max-w-2xl" />
@@ -227,7 +259,7 @@ export default function VanReveal() {
               style={{ x, y, rotate }}
               className="absolute top-1/2 w-[46vw] min-w-[320px] max-w-[640px] -translate-y-1/2"
             >
-              <VanPhoto className="w-full" />
+              <VanPhoto className="w-full" dashOffset={roadDashOffset} />
             </motion.div>
           )}
 
@@ -250,7 +282,7 @@ export default function VanReveal() {
               >
                 {callout.kind === "stat" ? (
                   <>
-                    <p className="text-2xl font-black tracking-tighter text-accent sm:text-3xl">
+                    <p className="font-display text-2xl font-black tracking-tighter text-accent sm:text-3xl">
                       {callout.value}
                     </p>
                     <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-foreground-muted sm:text-sm">
@@ -269,7 +301,7 @@ export default function VanReveal() {
         )}
 
         <div className="relative z-10 mt-10 flex flex-col items-center gap-2 text-center sm:mt-12">
-          <span className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+          <span className="font-display text-2xl font-black tracking-tight text-foreground sm:text-3xl">
             SG <span className="text-accent">ONDERNEMING</span>
           </span>
           <span className="text-sm font-medium tracking-wide text-foreground-muted">

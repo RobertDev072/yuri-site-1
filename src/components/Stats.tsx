@@ -61,7 +61,7 @@ export default function Stats() {
                 aria-hidden="true"
                 className="absolute inset-x-0 top-0 h-1 -skew-x-[30deg] bg-gradient-to-r from-accent via-accent-soft to-[#1f6fb2]"
               />
-              <div className="text-4xl font-black tracking-tighter text-accent sm:text-5xl">
+              <div className="font-display text-4xl font-black tracking-tighter text-accent sm:text-5xl">
                 <Counter stat={stat} />
               </div>
               <p className="mt-2 text-xs font-medium uppercase tracking-wide text-foreground-muted sm:text-sm">

@@ -46,7 +46,7 @@ export default function Process() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
             Van A tot Z
           </p>
-          <h2 className="mt-4 text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
+          <h2 className="mt-4 font-display text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
             Zo werken wij
           </h2>
           <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -80,7 +80,7 @@ export default function Process() {
                     </span>
                   </div>
                   <div className="lg:mt-6">
-                    <h3 className="text-lg font-bold tracking-tight text-foreground">
+                    <h3 className="font-display text-lg font-bold tracking-tight text-foreground">
                       {step.title}
                     </h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-foreground-muted">

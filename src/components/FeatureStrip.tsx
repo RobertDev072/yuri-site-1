@@ -39,7 +39,7 @@ export default function FeatureStrip() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
             Meer dan zonnepanelen
           </p>
-          <h2 className="mt-4 text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
+          <h2 className="mt-4 font-display text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
             Compleet ontzorgd
           </h2>
         </motion.div>
@@ -89,7 +89,7 @@ export default function FeatureStrip() {
               </div>
             </div>
             <div className="w-full lg:w-1/2">
-              <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h3 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 {DAKRENOVATIE_FEATURE.title}
               </h3>
               <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -123,7 +123,7 @@ export default function FeatureStrip() {
               </div>
             </div>
             <div className="w-full lg:w-1/2">
-              <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <h3 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 Vogelwering
               </h3>
               <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">

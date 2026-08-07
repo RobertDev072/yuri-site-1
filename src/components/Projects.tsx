@@ -127,7 +127,7 @@ export default function Projects() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
             Onze projecten
           </p>
-          <h2 className="mt-4 text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
+          <h2 className="mt-4 font-display text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
             Recent opgeleverd
           </h2>
           <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -150,7 +150,7 @@ export default function Projects() {
                     <Icon size={18} aria-hidden="true" />
                   </span>
                   <div>
-                    <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                    <h3 className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                       {group.title}
                     </h3>
                     <p className="text-sm text-foreground-muted">

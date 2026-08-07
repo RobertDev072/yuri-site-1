@@ -81,7 +81,7 @@ export default function CTA() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center"
         >
-          <h2 className="text-4xl font-black tracking-tighter text-black sm:text-5xl">
+          <h2 className="font-display text-4xl font-black tracking-tighter text-black sm:text-5xl">
             Klaar om te verduurzamen?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-black/80 sm:text-lg">

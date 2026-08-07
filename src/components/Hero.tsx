@@ -25,7 +25,7 @@ export default function Hero() {
         <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
           Bouw &amp; Verduurzaming
         </p>
-        <h1 className="mt-4 max-w-4xl text-[13vw] font-black leading-[0.95] tracking-tighter text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+        <h1 className="mt-4 max-w-4xl font-display text-[13vw] font-black leading-[0.95] tracking-tighter text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
           Verduurzamen
           <br />
           begint bij <span className="text-accent">vakwerk</span>
@@ -52,7 +52,7 @@ export default function Hero() {
           ].map(([value, label]) => (
             <div key={label} className="border-l border-white/15 pl-4">
               <dt className="sr-only">{label}</dt>
-              <dd className="text-2xl font-bold text-foreground sm:text-3xl">
+              <dd className="font-display text-2xl font-bold text-foreground sm:text-3xl">
                 {value}
               </dd>
               <dd className="text-xs text-foreground-muted sm:text-sm">

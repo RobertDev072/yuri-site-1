@@ -34,7 +34,7 @@ export default function WhyUs() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
             Waarom SG Onderneming
           </p>
-          <h2 className="mt-4 text-4xl font-black leading-[1.05] tracking-tighter text-foreground sm:text-5xl">
+          <h2 className="mt-4 font-display text-4xl font-black leading-[1.05] tracking-tighter text-foreground sm:text-5xl">
             Eén partner, van eerste schets tot laatste schroef
           </h2>
           <p className="mt-5 text-base leading-relaxed text-foreground-muted sm:text-lg">

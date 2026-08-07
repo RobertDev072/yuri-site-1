@@ -76,7 +76,7 @@ export default function Solutions() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-accent">
             Onze oplossingen
           </p>
-          <h2 className="mt-4 text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
+          <h2 className="mt-4 font-display text-4xl font-black tracking-tighter text-foreground sm:text-5xl">
             Alles voor een duurzame woning
           </h2>
           <p className="mt-4 text-base leading-relaxed text-foreground-muted sm:text-lg">
@@ -121,7 +121,7 @@ export default function Solutions() {
                   />
                 </div>
                 <h3
-                  className={`mt-5 font-bold tracking-tight text-foreground ${
+                  className={`mt-5 font-display font-bold tracking-tight text-foreground ${
                     solution.flagship ? "text-2xl" : "text-xl"
                   }`}
                 >
