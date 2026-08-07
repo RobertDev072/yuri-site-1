@@ -42,25 +42,6 @@ export default function Hero() {
             Bekijk onze oplossingen
           </Button>
         </div>
-
-        <dl className="mt-16 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-4">
-          {[
-            ["10+", "jaar garantie"],
-            ["500+", "installaties"],
-            ["24/7", "service"],
-            ["100%", "duurzaam"],
-          ].map(([value, label]) => (
-            <div key={label} className="border-l border-white/15 pl-4">
-              <dt className="sr-only">{label}</dt>
-              <dd className="font-display text-2xl font-bold text-foreground sm:text-3xl">
-                {value}
-              </dd>
-              <dd className="text-xs text-foreground-muted sm:text-sm">
-                {label}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
 
       <a
