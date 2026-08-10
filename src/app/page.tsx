@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import VanReveal from "@/components/VanReveal";
 import Solutions from "@/components/Solutions";
+import WorkCollage from "@/components/WorkCollage";
 import Stats from "@/components/Stats";
 import WhyUs from "@/components/WhyUs";
 import Process from "@/components/Process";
@@ -19,6 +20,9 @@ export default function Home() {
         <Hero />
         <VanReveal />
         <Solutions />
+        <LiveryDivider />
+        <WorkCollage />
+        <LiveryDivider />
         <Stats />
         <LiveryDivider />
         <WhyUs />
