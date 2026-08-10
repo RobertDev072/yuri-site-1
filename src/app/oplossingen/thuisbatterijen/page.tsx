@@ -90,10 +90,9 @@ const REQUIREMENTS: IconBulletItem[] = [
   },
 ];
 
-// NOTE: "AlphaESS" is used here purely as an illustrative example of a
-// well-known lithium-ion battery brand. Confirm with the client whether
-// SG Onderneming may name this specific supplier publicly before this
-// page goes live — swap or remove the name if not.
+// Confirmed real: the AlphaESS logo is visible on the client's own
+// installation photos (thuisbatterijen/batterij-*.jpg), so this is an
+// actual supplier, not a placeholder.
 const EXAMPLE_BATTERY_BRAND = "AlphaESS";
 
 export default function ThuisbatterijenPage() {
@@ -105,8 +104,8 @@ export default function ThuisbatterijenPage() {
           eyebrow="Oplossingen"
           title="Thuisbatterijen"
           intro="Sla uw eigen zonnestroom op en gebruik hem wanneer u wilt — dag en nacht, met of zonder zon."
-          imageSrc="/images/projecten/project-06-batterij.jpg"
-          imageAlt="Thuisbatterij geïnstalleerd bij een particuliere woning"
+          imageSrc="/images/thuisbatterijen/batterij-01.jpg"
+          imageAlt="AlphaESS thuisbatterij geïnstalleerd bij een particuliere woning"
         />
 
         <ContentSection

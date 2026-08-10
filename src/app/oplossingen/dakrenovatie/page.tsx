@@ -49,42 +49,42 @@ const ACTIVITIES: IconBulletItem[] = [
 
 const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
-    src: "/images/dakrenovatie/dak-01.jpg",
+    src: "/images/dakrenovatie/01.jpg",
     alt: "Dakkapel met dakramen tijdens een dakrenovatieproject",
     caption: "Dakkapel met dakramen",
   },
   {
-    src: "/images/dakrenovatie/dak-02.jpg",
+    src: "/images/dakrenovatie/02.jpg",
     alt: "Vernieuwde dakbedekking op een woning",
     caption: "Vernieuwde dakbedekking",
   },
   {
-    src: "/images/dakrenovatie/dak-03.jpg",
+    src: "/images/dakrenovatie/03.jpg",
     alt: "Woonhuisuitbouw met grote raampartij tijdens een verbouwing",
     caption: "Aanbouw met grote raampartij",
   },
   {
-    src: "/images/dakrenovatie/dak-04.jpg",
+    src: "/images/dakrenovatie/04.jpg",
     alt: "Dakrenovatie in uitvoering",
     caption: "Dakrenovatie in uitvoering",
   },
   {
-    src: "/images/dakrenovatie/dak-05.jpg",
+    src: "/images/dakrenovatie/05.jpg",
     alt: "Nieuwe dakpannen op een vernieuwd dak",
     caption: "Nieuwe dakpannen",
   },
   {
-    src: "/images/dakrenovatie/dak-06.jpg",
+    src: "/images/dakrenovatie/06.jpg",
     alt: "Dakraam voor extra lichtinval in een dakrenovatieproject",
     caption: "Extra lichtinval door dakramen",
   },
   {
-    src: "/images/dakrenovatie/dak-07.jpg",
+    src: "/images/dakrenovatie/07.jpg",
     alt: "Dakwerk van dichtbij tijdens een renovatie",
     caption: "Dakwerk van dichtbij",
   },
   {
-    src: "/images/dakrenovatie/dak-08.jpg",
+    src: "/images/dakrenovatie/08.jpg",
     alt: "Afgeronde dakrenovatie op een particuliere woning",
     caption: "Afgeronde dakrenovatie",
   },
@@ -99,8 +99,8 @@ export default function DakrenovatiePage() {
           eyebrow="Oplossingen"
           title="Dakrenovatie"
           intro="Een gezond, geïsoleerd dak is de stevige basis onder elke verduurzaming."
-          imageSrc="/images/dakrenovatie/dak-01.jpg"
-          imageAlt="Dakkapel met dakramen tijdens een dakrenovatieproject"
+          imageSrc="/images/dakrenovatie/hero.webp"
+          imageAlt="Dakrenovatie in uitvoering: dakkapel met dakramen en scaffolding"
         />
 
         <ContentSection

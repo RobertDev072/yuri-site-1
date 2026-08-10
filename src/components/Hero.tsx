@@ -15,7 +15,7 @@ export default function Hero() {
           here (they'd double up on what the image already carries). */}
       <div className="absolute inset-0">
         <Image
-          src="/images/hero-banner.png"
+          src="/images/brand/hero-banner.png"
           alt="Bedrijfswagen van SG Onderneming bij een woning tijdens de schemering, met een monteur op het dak die zonnepanelen installeert"
           fill
           priority

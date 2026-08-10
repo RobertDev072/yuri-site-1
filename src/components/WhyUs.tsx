@@ -9,7 +9,7 @@ export default function WhyUs() {
     <section className="relative flex min-h-[70vh] w-full items-center overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="/images/hero-dusk.jpg"
+          src="/images/brand/hero-dusk.jpg"
           alt="Woonwijk in de schemering met zonnepanelen op de daken, gefotografeerd voor SG Onderneming"
           fill
           sizes="100vw"

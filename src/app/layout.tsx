@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "SG Onderneming",
   ],
   icons: {
-    icon: "/images/logo.jpg",
+    icon: "/images/brand/logo.jpg",
   },
   openGraph: {
     title: "SG Onderneming — Bouw & Verduurzaming",

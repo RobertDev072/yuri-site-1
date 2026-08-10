@@ -51,7 +51,7 @@ export default function Header() {
         >
           <span className="relative h-10 w-10 overflow-hidden rounded-full bg-white ring-1 ring-white/10 sm:h-11 sm:w-11">
             <Image
-              src="/images/logo.jpg"
+              src="/images/brand/logo.jpg"
               alt="SG Onderneming logo"
               fill
               sizes="44px"

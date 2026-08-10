@@ -40,7 +40,7 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <span className="relative h-10 w-10 overflow-hidden rounded-full bg-white ring-1 ring-white/10">
                 <Image
-                  src="/images/logo.jpg"
+                  src="/images/brand/logo.jpg"
                   alt="SG Onderneming logo"
                   fill
                   sizes="40px"

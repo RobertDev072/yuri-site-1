@@ -61,6 +61,7 @@ const OTHER_SOLUTIONS: Solution[] = [
     title: "Verbouwingen",
     description:
       "Verbouwingen en algemeen onderhoud aan uw woning, van klein klusje tot complete renovatie.",
+    href: "/oplossingen/verbouwingen",
   },
   {
     icon: Bird,

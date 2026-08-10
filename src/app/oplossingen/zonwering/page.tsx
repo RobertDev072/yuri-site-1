@@ -49,8 +49,8 @@ export default function ZonweringPage() {
           eyebrow="Oplossingen"
           title="Zonwering"
           intro="Comfortabel wonen, ook op de warmste dagen — met zonwering op maat."
-          imageSrc="/images/zonwering/zonwering-01.jpg"
-          imageAlt="Geïnstalleerd uitvalscherm boven een terras aan de achterzijde van een woning"
+          imageSrc="/images/zonwering/hero.webp"
+          imageAlt="Geïnstalleerd zonnescherm boven de tuindeuren aan de achterzijde van een woning"
         />
 
         <ContentSection

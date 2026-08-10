@@ -17,17 +17,17 @@ export const metadata: Metadata = {
 
 const MONTAGE_PHOTOS: GalleryPhoto[] = [
   {
-    src: "/images/projecten/project-01.jpg",
+    src: "/images/zonnepanelen/01.jpg",
     alt: "Particuliere woning met nieuw geïnstalleerde zonnepanelen op het dak",
     caption: "Zonnepanelen · particuliere woning",
   },
   {
-    src: "/images/projecten/project-04.jpg",
+    src: "/images/zonnepanelen/04.jpg",
     alt: "Woning met zonnepanelen voor duurzame energieopwekking",
     caption: "Duurzame energieopwekking",
   },
   {
-    src: "/images/projecten/project-05.jpg",
+    src: "/images/zonnepanelen/05.jpg",
     alt: "Recent afgeronde zonnepanelen installatie op een particuliere woning",
     caption: "Recent opgeleverd",
   },
@@ -42,7 +42,7 @@ export default function ZonnepanelenPage() {
           eyebrow="Oplossingen"
           title="Zonnepanelen"
           intro="Hoogrendement zonnepanelen op maat van uw dak, voor maximale opbrengst en een snelle terugverdientijd."
-          imageSrc="/images/projecten/project-02.jpg"
+          imageSrc="/images/zonnepanelen/02.jpg"
           imageAlt="Woning met volledig belegd zonnepanelendak"
         />
 

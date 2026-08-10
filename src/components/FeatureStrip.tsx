@@ -11,15 +11,15 @@ const DAKRENOVATIE_FEATURE = {
     "Een verouderd of beschadigd dak vormt de basis van elk verduurzamingsplan. Wij vernieuwen uw dak grondig en vakkundig, zodat het klaar is voor de komende decennia — inclusief zonnepanelen.",
   photos: [
     {
-      src: "/images/projecten/project-10-dak.jpg",
+      src: "/images/dakrenovatie/uitvoering-01.jpg",
       alt: "Dakwerk in uitvoering door een monteur van SG Onderneming",
     },
     {
-      src: "/images/projecten/project-11-dak.jpg",
+      src: "/images/dakrenovatie/uitvoering-02.jpg",
       alt: "Dakrenovatie project van SG Onderneming in volle gang",
     },
     {
-      src: "/images/projecten/project-12-dak.jpg",
+      src: "/images/dakrenovatie/uitvoering-03.jpg",
       alt: "Vakkundig uitgevoerd dakwerk, klaar voor zonnepanelen",
     },
   ],

@@ -42,7 +42,7 @@ function VanPhoto({
         className="absolute inset-0 -z-10 scale-125 bg-[radial-gradient(ellipse_at_center,rgba(255,122,26,0.4),transparent_65%)] blur-2xl"
       />
       <Image
-        src="/images/van-cutout.png"
+        src="/images/van/van-cutout.png"
         alt="Bedrijfswagen van SG Onderneming met oranje-blauwe wrap-belettering"
         fill
         sizes="(max-width: 768px) 90vw, 640px"

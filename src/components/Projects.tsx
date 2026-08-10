@@ -28,27 +28,27 @@ const GROUPS: ProjectGroup[] = [
     gridClassName: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
     projects: [
       {
-        src: "/images/projecten/project-01.jpg",
+        src: "/images/zonnepanelen/01.jpg",
         alt: "Particuliere woning met nieuw geïnstalleerde zonnepanelen op het dak",
         caption: "Zonnepanelen · particuliere woning",
       },
       {
-        src: "/images/projecten/project-02.jpg",
+        src: "/images/zonnepanelen/02.jpg",
         alt: "Woning met volledig belegd zonnepanelendak",
         caption: "Volledig zonnepanelendak",
       },
       {
-        src: "/images/projecten/project-03.jpg",
+        src: "/images/zonnepanelen/03.jpg",
         alt: "Zonnepanelen op maat geplaatst op een schuin dak",
         caption: "Zonnepanelen op maat",
       },
       {
-        src: "/images/projecten/project-04.jpg",
+        src: "/images/zonnepanelen/04.jpg",
         alt: "Woning met zonnepanelen voor duurzame energieopwekking",
         caption: "Duurzame energieopwekking",
       },
       {
-        src: "/images/projecten/project-05.jpg",
+        src: "/images/zonnepanelen/05.jpg",
         alt: "Recent afgeronde zonnepanelen installatie op een particuliere woning",
         caption: "Recent opgeleverd",
       },
@@ -63,24 +63,24 @@ const GROUPS: ProjectGroup[] = [
     gridClassName: "grid-cols-2 lg:grid-cols-4",
     projects: [
       {
-        src: "/images/projecten/project-06-batterij.jpg",
-        alt: "Thuisbatterij geïnstalleerd bij een particuliere woning",
+        src: "/images/thuisbatterijen/batterij-01.jpg",
+        alt: "AlphaESS thuisbatterij geïnstalleerd bij een particuliere woning",
         caption: "Thuisbatterij installatie",
       },
       {
-        src: "/images/projecten/project-07-batterij.jpg",
-        alt: "Elektrotechnische aansluiting van een energieopslagsysteem",
-        caption: "Elektra & techniek",
+        src: "/images/thuisbatterijen/batterij-02.jpg",
+        alt: "Twee AlphaESS thuisbatterijen naast elkaar geïnstalleerd",
+        caption: "Uitgebreide opslag",
       },
       {
-        src: "/images/projecten/project-08-batterij.jpg",
-        alt: "Thuisbatterij naast de meterkast van een woning",
-        caption: "Thuisbatterij & meterkast",
-      },
-      {
-        src: "/images/projecten/project-09-batterij.jpg",
+        src: "/images/thuisbatterijen/batterij-03.jpg",
         alt: "Slim energieopslagsysteem voor thuisgebruik",
         caption: "Slimme energieopslag",
+      },
+      {
+        src: "/images/thuisbatterijen/meterkast.jpg",
+        alt: "Meterkast uitgebreid en aangepast voor een thuisbatterij-installatie",
+        caption: "Meterkast op maat",
       },
     ],
   },
@@ -92,17 +92,17 @@ const GROUPS: ProjectGroup[] = [
     gridClassName: "grid-cols-1 sm:grid-cols-3",
     projects: [
       {
-        src: "/images/projecten/project-10-dak.jpg",
+        src: "/images/dakrenovatie/uitvoering-01.jpg",
         alt: "Dakwerk in uitvoering door een monteur van SG Onderneming",
         caption: "Dakwerk in uitvoering",
       },
       {
-        src: "/images/projecten/project-11-dak.jpg",
+        src: "/images/dakrenovatie/uitvoering-02.jpg",
         alt: "Dakrenovatie project in volle gang",
         caption: "Dakrenovatie",
       },
       {
-        src: "/images/projecten/project-12-dak.jpg",
+        src: "/images/dakrenovatie/uitvoering-03.jpg",
         alt: "Vakkundig uitgevoerd dakwerk",
         caption: "Vakkundig dakwerk",
       },
