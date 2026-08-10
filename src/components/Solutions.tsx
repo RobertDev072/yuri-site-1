@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Sun,
@@ -8,6 +9,8 @@ import {
   Home,
   Hammer,
   Bird,
+  Blinds,
+  ArrowRight,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,15 +19,18 @@ type Solution = {
   title: string;
   description: string;
   flagship?: boolean;
+  /** Link to the deep-dive detail page, if one exists yet. */
+  href?: string;
 };
 
-const SOLUTIONS: Solution[] = [
+const FLAGSHIP_SOLUTIONS: Solution[] = [
   {
     icon: Sun,
     title: "Zonnepanelen",
     description:
       "Hoogrendement zonnepanelen op maat van uw dak, voor maximale opbrengst en snelle terugverdientijd.",
     flagship: true,
+    href: "/oplossingen/zonnepanelen",
   },
   {
     icon: BatteryCharging,
@@ -32,7 +38,11 @@ const SOLUTIONS: Solution[] = [
     description:
       "Sla zelf opgewekte stroom op en gebruik uw eigen energie wanneer u die nodig heeft, dag en nacht.",
     flagship: true,
+    href: "/oplossingen/thuisbatterijen",
   },
+];
+
+const OTHER_SOLUTIONS: Solution[] = [
   {
     icon: PlugZap,
     title: "Laadoplossingen",
@@ -44,6 +54,7 @@ const SOLUTIONS: Solution[] = [
     title: "Dakrenovatie",
     description:
       "Van reparatie tot volledige vernieuwing van uw dak, degelijk uitgevoerd en klaar voor de toekomst.",
+    href: "/oplossingen/dakrenovatie",
   },
   {
     icon: Hammer,
@@ -57,7 +68,82 @@ const SOLUTIONS: Solution[] = [
     description:
       "Vogelwerende mesh onder uw zonnepanelen tegen nesten en schade, netjes wegwerkt.",
   },
+  {
+    icon: Blinds,
+    title: "Zonwering",
+    description:
+      "Screens, zonneschermen en rolluiken op maat, voor een koel huis en een comfortabel terras op de warmste dagen.",
+    href: "/oplossingen/zonwering",
+  },
 ];
+
+/**
+ * Renders a single solution card. Cards with an `href` become a real
+ * Next.js <Link> (so the whole card is clickable and keyboard-focusable);
+ * cards without one — solutions that don't have a dedicated page yet —
+ * render as a plain, non-interactive div.
+ */
+function SolutionCard({ solution }: { solution: Solution }) {
+  const Icon = solution.icon;
+  const surfaceClassName = `group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-background-alt/60 p-6 backdrop-blur-sm transition-colors hover:border-accent/40 ${
+    solution.flagship ? "sm:p-8" : ""
+  }`;
+
+  const content = (
+    <>
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-1 -skew-x-[30deg] bg-gradient-to-r from-accent via-accent-soft to-[#1f6fb2] opacity-70 transition-opacity group-hover:opacity-100"
+      />
+      {solution.flagship && (
+        <span className="absolute right-5 top-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-black">
+          Populair
+        </span>
+      )}
+      <div
+        className={`inline-flex items-center justify-center rounded-xl bg-accent/10 text-accent ${
+          solution.flagship ? "h-14 w-14" : "h-12 w-12"
+        }`}
+      >
+        <Icon size={solution.flagship ? 28 : 24} aria-hidden="true" />
+      </div>
+      <h3
+        className={`mt-5 font-display font-bold tracking-tight text-foreground ${
+          solution.flagship ? "text-2xl" : "text-xl"
+        }`}
+      >
+        {solution.title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-foreground-muted sm:text-base">
+        {solution.description}
+      </p>
+      {solution.href && (
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+          Meer informatie
+          <ArrowRight
+            size={16}
+            aria-hidden="true"
+            className="transition-transform group-hover:translate-x-1"
+          />
+        </span>
+      )}
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-accent/0 blur-2xl transition-colors group-hover:bg-accent/10"
+      />
+    </>
+  );
+
+  if (solution.href) {
+    return (
+      <Link href={solution.href} className={`focus-ring ${surfaceClassName}`}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={surfaceClassName}>{content}</div>;
+}
 
 export default function Solutions() {
   return (
@@ -85,58 +171,37 @@ export default function Solutions() {
           </p>
         </motion.div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {SOLUTIONS.map((solution, index) => {
-            const Icon = solution.icon;
-            return (
-              <motion.div
-                key={solution.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: (index % 4) * 0.08, ease: "easeOut" }}
-                className={`group relative overflow-hidden rounded-2xl border border-border-subtle bg-background-alt/60 p-6 backdrop-blur-sm transition-colors hover:border-accent/40 ${
-                  solution.flagship
-                    ? "lg:col-span-2 sm:p-8"
-                    : "lg:col-span-1"
-                }`}
-              >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-1 -skew-x-[30deg] bg-gradient-to-r from-accent via-accent-soft to-[#1f6fb2] opacity-70 transition-opacity group-hover:opacity-100"
-                />
-                {solution.flagship && (
-                  <span className="absolute right-5 top-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-black">
-                    Populair
-                  </span>
-                )}
-                <div
-                  className={`inline-flex items-center justify-center rounded-xl bg-accent/10 text-accent ${
-                    solution.flagship ? "h-14 w-14" : "h-12 w-12"
-                  }`}
-                >
-                  <Icon
-                    size={solution.flagship ? 28 : 24}
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3
-                  className={`mt-5 font-display font-bold tracking-tight text-foreground ${
-                    solution.flagship ? "text-2xl" : "text-xl"
-                  }`}
-                >
-                  {solution.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-muted sm:text-base">
-                  {solution.description}
-                </p>
-                <div
-                  aria-hidden="true"
-                  className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-accent/0 blur-2xl transition-colors group-hover:bg-accent/10"
-                />
-              </motion.div>
-            );
-          })}
+        {/* Flagship duo: our two headline offerings, full-width side by side. */}
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {FLAGSHIP_SOLUTIONS.map((solution, index) => (
+            <motion.div
+              key={solution.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
+              className="h-full"
+            >
+              <SolutionCard solution={solution} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Remaining services reflow into a balanced 3-column block instead
+            of a lone trailing card in a 4-column grid. */}
+        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {OTHER_SOLUTIONS.map((solution, index) => (
+            <motion.div
+              key={solution.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: "easeOut" }}
+              className="h-full"
+            >
+              <SolutionCard solution={solution} />
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
