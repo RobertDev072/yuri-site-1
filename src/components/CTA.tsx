@@ -2,7 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import Button from "./Button";
 
 const INTERESTS = [
@@ -28,6 +28,23 @@ const INITIAL_STATE: FormState = {
   bericht: "",
 };
 
+// One shared template for the message content, reused for both the e-mail
+// body and the WhatsApp text so the two channels always stay in sync — only
+// the light WhatsApp bold-markup differs between the two `emphasize` modes.
+function buildMessageLines(form: FormState, emphasize: boolean) {
+  const label = (text: string) => (emphasize ? `*${text}*` : text);
+  return [
+    label("Nieuwe aanvraag via de website"),
+    "",
+    `${label("Naam:")} ${form.naam}`,
+    `${label("Contact:")} ${form.contact}`,
+    `${label("Interesse:")} ${form.interesse}`,
+    "",
+    label("Bericht:"),
+    form.bericht,
+  ];
+}
+
 export default function CTA() {
   const formId = useId();
   const [form, setForm] = useState<FormState>(INITIAL_STATE);
@@ -38,28 +55,38 @@ export default function CTA() {
     if (error) setError(null);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  function validate() {
     if (!form.naam.trim() || !form.contact.trim() || !form.bericht.trim()) {
       setError("Vul uw naam, e-mail of telefoon en bericht in.");
-      return;
+      return false;
     }
+    return true;
+  }
+
+  // Default form submit (Enter key or the primary button) sends via e-mail.
+  function handleEmailSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!validate()) return;
 
     const subject = `Aanvraag via website — ${form.interesse}`;
-    const body = [
-      `Naam: ${form.naam}`,
-      `E-mail of telefoon: ${form.contact}`,
-      `Interesse: ${form.interesse}`,
-      "",
-      form.bericht,
-    ].join("\n");
-
-    const mailto = `mailto:info@sgonderneming.nl?subject=${encodeURIComponent(
+    const body = buildMessageLines(form, false).join("\n");
+    window.location.href = `mailto:info@sgonderneming.nl?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
+  }
 
-    window.location.href = mailto;
+  // Secondary action button (type="button", so it never triggers the
+  // form's own submit handler) opens a WhatsApp chat with the same
+  // information, formatted with WhatsApp's own *bold* markup.
+  function handleWhatsAppClick() {
+    if (!validate()) return;
+
+    const text = buildMessageLines(form, true).join("\n");
+    window.open(
+      `https://wa.me/31611185395?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
 
   return (
@@ -116,7 +143,7 @@ export default function CTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          onSubmit={handleSubmit}
+          onSubmit={handleEmailSubmit}
           noValidate
           className="relative mt-14 rounded-3xl border border-black/15 bg-black/90 p-6 text-left shadow-[0_30px_90px_-30px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:p-10"
         >
@@ -209,13 +236,26 @@ export default function CTA() {
             </p>
           )}
 
-          <Button type="submit" className="mt-6">
-            Verstuur aanvraag
-          </Button>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Button type="submit" icon={false}>
+              <Mail size={20} aria-hidden="true" />
+              Verstuur via e-mail
+            </Button>
+            <button
+              type="button"
+              onClick={handleWhatsAppClick}
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-base font-bold text-black transition-all duration-200 hover:scale-105 hover:bg-[#1ebe5a]"
+            >
+              <MessageCircle size={20} aria-hidden="true" />
+              Verstuur via WhatsApp
+            </button>
+          </div>
 
           <p className="mt-4 text-xs text-white/50">
-            Dit opent uw e-mailprogramma met een voorgevuld bericht. Wij
-            verzamelen of bewaren de ingevulde gegevens niet zelf.
+            Dit opent uw e-mailprogramma of WhatsApp met een voorgevuld,
+            netjes opgemaakt bericht — inclusief uw naam, contactgegevens en
+            interesse. Wij verzamelen of bewaren de ingevulde gegevens niet
+            zelf.
           </p>
         </motion.form>
       </div>
