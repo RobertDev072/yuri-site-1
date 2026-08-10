@@ -70,11 +70,6 @@ const GALLERY_PHOTOS: GalleryPhoto[] = [
     alt: "Voorgevel van een woning na renovatie",
     caption: "Voorgevel na renovatie",
   },
-  {
-    src: "/images/verbouwingen/hero-gevel-rolluiken.webp",
-    alt: "Gevel met nieuwe rolluiken na een verbouwing",
-    caption: "Gevel & rolluiken",
-  },
 ];
 
 export default function VerbouwingenPage() {
