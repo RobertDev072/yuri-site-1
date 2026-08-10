@@ -64,3 +64,18 @@ button:focus-visible {
     scroll-behavior: auto;
   }
 }
+
+/* Animated dash-offset for the EnergyFlow diagram's connector lines —
+   simulates current moving along a wire. Disabled under reduced motion
+   (see the component's own prefers-reduced-motion check, which skips
+   applying this class entirely rather than relying on CSS alone). */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.flow-line {
+  stroke-dasharray: 6 10;
+  animation: flow-dash 1.1s linear infinite;
+}

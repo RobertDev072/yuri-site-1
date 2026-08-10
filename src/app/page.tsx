@@ -4,7 +4,7 @@ import VanReveal from "@/components/VanReveal";
 import Solutions from "@/components/Solutions";
 import WorkCollage from "@/components/WorkCollage";
 import Stats from "@/components/Stats";
-import WhyUs from "@/components/WhyUs";
+import EnergyFlow from "@/components/EnergyFlow";
 import Process from "@/components/Process";
 import Projects from "@/components/Projects";
 import FeatureStrip from "@/components/FeatureStrip";
@@ -25,7 +25,7 @@ export default function Home() {
         <LiveryDivider />
         <Stats />
         <LiveryDivider />
-        <WhyUs />
+        <EnergyFlow />
         <Process />
         <Projects />
         <LiveryDivider />

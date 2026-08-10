@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import {
   motion,
   useReducedMotion,
-  useScroll,
+  useMotionValue,
   useTransform,
+  useInView,
+  animate,
   type MotionValue,
 } from "framer-motion";
 import { MapPin } from "lucide-react";
@@ -74,17 +76,20 @@ function VanPhoto({
 }
 
 /**
- * Scroll progress checkpoints shared by every transform below. Keeping one
- * canonical list of "beats" — and always anchoring index 0 to progress 0 and
- * the last index to progress 1 — means every `useTransform` call stays fully
- * defined across [0, 1] and never snaps to a default/clamped value outside
- * its own keyframes (a common framer-motion gotcha).
+ * Time-progress checkpoints shared by every transform below (0 = start of
+ * one drive-by loop, 1 = end). Keeping one canonical list of "beats" — and
+ * always anchoring index 0 to progress 0 and the last index to progress 1 —
+ * means every `useTransform` call stays fully defined across [0, 1] and
+ * never snaps to a default/clamped value outside its own keyframes (a
+ * common framer-motion gotcha).
  *
  * The gaps between beats are deliberately uneven: short gaps ("dwell" beats,
  * e.g. 0.26 -> 0.34) make the van barely move while a callout is passing, and
  * long gaps (e.g. 0.34 -> 0.50) make it cruise quickly to the next waypoint —
  * that unevenness is what turns a single linear glide into a multi-beat
- * drive sequence.
+ * drive sequence. This same beat map used to be driven by scroll progress;
+ * it now runs on a self-looping timer instead (see `useDriveProgress`), so
+ * the van drives automatically without the visitor needing to scroll.
  */
 // framer-motion's `useTransform` types its input/output ranges as mutable
 // arrays, so these are deliberately plain `number[]` (not `as const` tuples)
@@ -99,6 +104,35 @@ const X_VW: number[] = [-42, -6, 14, 18, 46, 50, 80, 84, 108];
 const Y_PX: number[] = [0, -5, 3, -4, 4, -3, 4, -3, 0];
 // Slight nose-up/nose-down rotation on acceleration and braking.
 const ROTATE_DEG: number[] = [0, -1.6, 1, -1.2, 0.9, -1, 0.9, -0.9, 0];
+
+// One full drive-by loop, in seconds — long enough to read each callout
+// comfortably before the van cycles back to the start.
+const LOOP_DURATION = 11;
+
+/** Drives a 0->1 progress value on a repeating timer once the section first
+ *  scrolls into view (rather than the previous scroll-scrubbed version) —
+ *  "de busje automatisch laten rijden" per the client's request. Returns a
+ *  plain 0 value (no animation) when reduced motion is preferred. */
+function useDriveProgress(
+  sectionRef: RefObject<HTMLElement | null>,
+  prefersReducedMotion: boolean
+) {
+  const progress = useMotionValue(0);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (prefersReducedMotion || !isInView) return;
+    const controls = animate(progress, [0, 1], {
+      duration: LOOP_DURATION,
+      ease: "linear",
+      repeat: Infinity,
+      repeatType: "loop",
+    });
+    return () => controls.stop();
+  }, [isInView, prefersReducedMotion, progress]);
+
+  return progress;
+}
 
 type StatCallout = {
   kind: "stat";
@@ -173,29 +207,18 @@ function CalloutBubble({
 export default function VanReveal() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const progress = useDriveProgress(sectionRef, Boolean(prefersReducedMotion));
+  const animating = !prefersReducedMotion;
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
+  const x = useTransform(progress, BEATS, X_VW.map((v) => `${v}vw`));
+  const y = useTransform(progress, BEATS, Y_PX.map((v) => `${v}px`));
+  const rotate = useTransform(progress, BEATS, ROTATE_DEG);
 
-  const x = useTransform(
-    scrollYProgress,
-    BEATS,
-    X_VW.map((v) => `${v}vw`)
-  );
-  const y = useTransform(
-    scrollYProgress,
-    BEATS,
-    Y_PX.map((v) => `${v}px`)
-  );
-  const rotate = useTransform(scrollYProgress, BEATS, ROTATE_DEG);
-
-  const streakOpacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+  const streakOpacity = useTransform(progress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
   // Streaks travel a much larger horizontal distance than the van across the
-  // same [0, 1] scroll range, so they visibly overtake it — cheap parallax.
-  const streakX = useTransform(scrollYProgress, [0, 1], ["8vw", "-160vw"]);
-  // The road line's dashes reuse the exact same BEATS/scroll checkpoints as
+  // same [0, 1] progress range, so they visibly overtake it — cheap parallax.
+  const streakX = useTransform(progress, [0, 1], ["8vw", "-160vw"]);
+  // The road line's dashes reuse the exact same BEATS/progress checkpoints as
   // the van's own `x` travel above, scaled up and flipped in sign. That
   // keeps them mathematically in sync with the van (same cruise/dwell
   // timing) while drifting the opposite way and faster than it, so the road
@@ -203,7 +226,7 @@ export default function VanReveal() {
   // static line painted under it.
   const ROAD_PARALLAX_MULT = -2.4;
   const roadDashOffset = useTransform(
-    scrollYProgress,
+    progress,
     BEATS,
     X_VW.map((v) => `${v * ROAD_PARALLAX_MULT}vw`)
   );
@@ -213,19 +236,12 @@ export default function VanReveal() {
       ref={sectionRef}
       aria-label="De SG Onderneming bedrijfswagen op de weg"
       className="relative bg-background-deep"
-      style={{ height: prefersReducedMotion ? undefined : "300vh" }}
     >
-      <div
-        className={
-          prefersReducedMotion
-            ? "flex w-full flex-col items-center justify-center overflow-hidden py-24"
-            : "sticky top-0 flex h-screen w-full flex-col items-center justify-center overflow-hidden"
-        }
-      >
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-24">
         {/* Diagonal light streaks / speed lines, pure CSS gradients */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,122,26,0.07),transparent_60%)]" />
-          {!prefersReducedMotion && (
+          {animating && (
             <>
               <motion.div
                 style={{ opacity: streakOpacity, x: streakX }}
@@ -250,30 +266,30 @@ export default function VanReveal() {
         </p>
 
         <div className="relative z-10 h-[46vh] w-full min-h-[220px] max-h-[420px]">
-          {prefersReducedMotion ? (
-            <div className="flex h-full items-center justify-center px-6">
-              <VanPhoto className="w-full max-w-2xl" />
-            </div>
-          ) : (
+          {animating ? (
             <motion.div
               style={{ x, y, rotate }}
               className="absolute top-1/2 w-[46vw] min-w-[320px] max-w-[640px] -translate-y-1/2"
             >
               <VanPhoto className="w-full" dashOffset={roadDashOffset} />
             </motion.div>
+          ) : (
+            <div className="flex h-full items-center justify-center px-6">
+              <VanPhoto className="w-full max-w-2xl" />
+            </div>
           )}
 
-          {!prefersReducedMotion &&
+          {animating &&
             CALLOUTS.map((callout) => (
               <CalloutBubble
                 key={callout.kind === "stat" ? callout.label : callout.text}
                 callout={callout}
-                progress={scrollYProgress}
+                progress={progress}
               />
             ))}
         </div>
 
-        {prefersReducedMotion && (
+        {!animating && (
           <div className="relative z-10 mt-4 flex flex-wrap items-center justify-center gap-4 px-6">
             {CALLOUTS.map((callout) => (
               <div

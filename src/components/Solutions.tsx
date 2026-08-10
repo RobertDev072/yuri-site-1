@@ -48,6 +48,7 @@ const OTHER_SOLUTIONS: Solution[] = [
     title: "Laadoplossingen",
     description:
       "Laadpalen en laadstations voor thuis, veilig geïnstalleerd en afgestemd op uw zonnepanelen.",
+    href: "/oplossingen/laadoplossingen",
   },
   {
     icon: Home,
