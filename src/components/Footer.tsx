@@ -111,7 +111,7 @@ export default function Footer() {
             </h3>
             <div className="mt-4 flex items-center gap-3">
               <a
-                href="https://www.instagram.com/sg.onderneming"
+                href="https://www.instagram.com/sg_onderneming/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="SG Onderneming op Instagram"
