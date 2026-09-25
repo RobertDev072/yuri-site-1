@@ -91,11 +91,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:info@sgonderneming.nl"
+                  href="mailto:ysgroot@gmail.com"
                   className="focus-ring flex items-center gap-2.5 text-sm text-foreground-muted transition-colors hover:text-foreground"
                 >
                   <Mail size={16} aria-hidden="true" className="shrink-0" />
-                  info@sgonderneming.nl
+                  ysgroot@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-sm text-foreground-muted">

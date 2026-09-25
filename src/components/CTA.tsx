@@ -70,7 +70,7 @@ export default function CTA() {
 
     const subject = `Aanvraag via website — ${form.interesse}`;
     const body = buildMessageLines(form, false).join("\n");
-    window.location.href = `mailto:info@sgonderneming.nl?subject=${encodeURIComponent(
+    window.location.href = `mailto:ysgroot@gmail.com?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
   }
@@ -122,14 +122,14 @@ export default function CTA() {
               06 11 18 53 95
             </Button>
             <Button
-              href="mailto:info@sgonderneming.nl"
+              href="mailto:ysgroot@gmail.com"
               variant="secondary"
               tone="onAccent"
               icon={false}
               className="w-full sm:w-auto"
             >
               <Mail size={20} aria-hidden="true" />
-              info@sgonderneming.nl
+              ysgroot@gmail.com
             </Button>
           </div>
 
